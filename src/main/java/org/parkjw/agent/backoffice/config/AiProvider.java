@@ -1,0 +1,18 @@
+package org.parkjw.agent.backoffice.config;
+
+public enum AiProvider {
+	OLLAMA,
+	OPENAI,
+	ANTHROPIC,
+	AZURE_OPENAI,
+	GEMINI,
+	GOOGLE_VERTEX_AI,
+	AMAZON_BEDROCK,
+	MISTRAL,
+	DEEPSEEK,
+	Z_AI,
+	MINIMAX,
+	MIMO,
+	CURSOR,
+	OPENAI_COMPATIBLE
+}

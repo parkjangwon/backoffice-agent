@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://db-host:3306/service_db?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: readonly_user
+    password: readonly_password
+  ai:
+    model:
+      chat: ollama
+    ollama:
+      base-url: http://ollama-host:11434
+      chat:
+        model: gpt-oss:20b
+        options:
+          format: json
+
+ai-query:
+  ai:
+    provider: OLLAMA
+    model: gpt-oss:20b
+    base-url: http://ollama-host:11434
+    temperature: 0
+  security:
+    api-key-enabled: true
+    api-keys: change-me
+    request-signing-enabled: true
+    request-signing-secret: change-me-long-random-secret
+    request-signing-tolerance-seconds: 300
+    allowed-ips:
+      - 127.0.0.1
+      - 0:0:0:0:0:0:0:1
+      - ::1
+  catalog:
+    storage-path: data/catalog-snapshot.json
+  audit:
+    storage-path: data/audit-events.jsonl
+  scan:
+    include-databases: []
+    exclude-databases:
+      - "#mysql50#%"
+      - information_schema
+      - mysql
+      - performance_schema
+      - sys
+  policy:
+    default-limit: 100
+    max-limit: 1000
+    query-timeout-seconds: 10
+    export-max-rows: 5000
+  data-policy:
+    user-name-encrypted: true

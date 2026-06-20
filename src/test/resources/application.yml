@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://127.0.0.1:3306/test
+    username: test
+    password: test
+  ai:
+    model:
+      chat: ollama
+    ollama:
+      base-url: http://127.0.0.1:11434
+      chat:
+        model: test-model
+        options:
+          format: json
+
+ai-query:
+  security:
+    api-key-enabled: true
+    api-keys: test-key
+    allowed-ips: 127.0.0.1,0:0:0:0:0:0:0:1,::1
+  catalog:
+    storage-path: data/catalog-snapshot.json
+  audit:
+    storage-path: data/audit-events.jsonl
+  scan:
+    exclude-databases:
+      - information_schema
+      - mysql
+      - performance_schema
+      - sys
+  policy:
+    default-limit: 100
+    max-limit: 1000
+    query-timeout-seconds: 10
+    export-max-rows: 5000
+  data-policy:
+    user-name-encrypted: true

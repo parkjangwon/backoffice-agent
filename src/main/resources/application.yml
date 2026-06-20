@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: backoffice-agent
+  datasource:
+    hikari:
+      read-only: true
+  sql:
+    init:
+      mode: never
