@@ -86,7 +86,7 @@ class BackofficeSecurityRegressionTest {
 	@Test
 	void sqlAccessGuard_whenSqlTouchesSystemConfigTable_rejectsEvenIfSqlIsSelectOnly() {
 		// given
-		var properties = properties(true);
+		var properties = properties();
 		var guard = new SqlAccessGuard(properties, new SqlAnalyzer());
 		var sql = "select domain, config_value from tenant_acme.system_config where domain = 'acme'";
 
@@ -127,14 +127,13 @@ class BackofficeSecurityRegressionTest {
 				20);
 	}
 
-	private AiQueryProperties properties(boolean userNameEncrypted) {
+	private AiQueryProperties properties() {
 		return new AiQueryProperties(
 				null,
 				null,
 				null,
 				null,
 				null,
-				new AiQueryProperties.DataPolicy(userNameEncrypted),
 				null);
 	}
 

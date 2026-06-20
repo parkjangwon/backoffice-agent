@@ -42,7 +42,6 @@ public class SqlAccessGuard {
 		var lower = " " + sql.toLowerCase(Locale.ROOT);
 		rejectSystemObjects(lower);
 		rejectSecretColumns(lower);
-		rejectEncryptedNameColumns(lower);
 		rejectBlockedFunctions(lower);
 		rejectNonServiceUsageTables(sql, catalog);
 		rejectOutOfScopeExternalValues(lower, accessContext);
@@ -61,16 +60,6 @@ public class SqlAccessGuard {
 			if (sql.contains(column)) {
 				throw new SqlPolicyException("SQL attempts to query blocked secret credential data.");
 			}
-		}
-	}
-
-	private void rejectEncryptedNameColumns(String sql) {
-		if (!properties.dataPolicy().userNameEncrypted()) {
-			return;
-		}
-		var pattern = Pattern.compile("(^|[\\s,`.])(?:name|username|user_name|username|emp_name_kr)([\\s,`.]|$)", Pattern.CASE_INSENSITIVE);
-		if (pattern.matcher(sql).find()) {
-			throw new SqlPolicyException("SQL attempts to query encrypted user-name data. Use email as user identifier.");
 		}
 	}
 

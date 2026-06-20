@@ -19,8 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 		"ai-query.policy.default-limit=100",
 		"ai-query.policy.max-limit=1000",
 		"ai-query.policy.query-timeout-seconds=10",
-		"ai-query.policy.export-max-rows=5000",
-		"ai-query.data-policy.user-name-encrypted=true"
+		"ai-query.policy.export-max-rows=5000"
 })
 class BackofficeAgentApplicationTests {
 

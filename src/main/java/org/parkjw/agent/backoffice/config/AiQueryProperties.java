@@ -12,7 +12,6 @@ public record AiQueryProperties(
 		Audit audit,
 		Scan scan,
 		Policy policy,
-		DataPolicy dataPolicy,
 		Cache cache,
 		Ai ai) {
 
@@ -22,9 +21,8 @@ public record AiQueryProperties(
 			Audit audit,
 			Scan scan,
 			Policy policy,
-			DataPolicy dataPolicy,
 			Cache cache) {
-		this(security, catalog, audit, scan, policy, dataPolicy, cache, null);
+		this(security, catalog, audit, scan, policy, cache, null);
 	}
 
 	@ConstructorBinding
@@ -34,7 +32,6 @@ public record AiQueryProperties(
 		audit = audit == null ? new Audit("data/audit-events.jsonl") : audit;
 		scan = scan == null ? new Scan(List.of(), List.of("information_schema", "mysql", "performance_schema", "sys")) : scan;
 		policy = policy == null ? new Policy(100, 1000, 10, 5000) : policy;
-		dataPolicy = dataPolicy == null ? new DataPolicy(true) : dataPolicy;
 		cache = cache == null ? new Cache(true, 60, 200) : cache;
 		ai = ai == null ? new Ai(AiProvider.OLLAMA, "", "", 0.0) : ai;
 	}
@@ -91,9 +88,6 @@ public record AiQueryProperties(
 			var requested = requestedLimit == null ? defaultLimit : requestedLimit;
 			return Math.max(1, Math.min(requested, maxLimit));
 		}
-	}
-
-	public record DataPolicy(boolean userNameEncrypted) {
 	}
 
 	public record Cache(boolean enabled, int ttlSeconds, int maxEntries) {

@@ -99,8 +99,8 @@ class QueryServiceAuthorizationTest {
 				null,
 				null,
 				null,
-				null,
-				new AiQueryProperties.Cache(false, 60, 20));
+				new AiQueryProperties.Cache(false, 60, 20),
+				null);
 	}
 
 	private CatalogSnapshot catalog() {

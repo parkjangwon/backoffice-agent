@@ -134,8 +134,7 @@ class AgentConfigurationValidatorTest {
 				.withProperty("ai-query.policy.default-limit", "100")
 				.withProperty("ai-query.policy.max-limit", "1000")
 				.withProperty("ai-query.policy.query-timeout-seconds", "10")
-				.withProperty("ai-query.policy.export-max-rows", "5000")
-				.withProperty("ai-query.data-policy.user-name-encrypted", "true");
+				.withProperty("ai-query.policy.export-max-rows", "5000");
 	}
 
 	private AiQueryProperties properties(List<String> apiKeys) {

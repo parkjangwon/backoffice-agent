@@ -48,8 +48,8 @@ class QueryServiceCacheTest {
 				null,
 				null,
 				null,
-				null,
-				new AiQueryProperties.Cache(true, 60, 20));
+				new AiQueryProperties.Cache(true, 60, 20),
+				null);
 		var catalogRepository = mock(CatalogRepository.class);
 		when(catalogRepository.current()).thenReturn(catalog());
 		when(catalogRepository.currentIndex()).thenReturn(org.parkjw.agent.backoffice.catalog.CatalogSearchIndex.empty());
@@ -112,8 +112,8 @@ class QueryServiceCacheTest {
 				null,
 				null,
 				null,
-				null,
-				new AiQueryProperties.Cache(false, 60, 20));
+				new AiQueryProperties.Cache(false, 60, 20),
+				null);
 		var catalogRepository = mock(CatalogRepository.class);
 		when(catalogRepository.current()).thenReturn(catalog());
 		when(catalogRepository.currentIndex()).thenReturn(org.parkjw.agent.backoffice.catalog.CatalogSearchIndex.empty());
@@ -158,8 +158,8 @@ class QueryServiceCacheTest {
 				null,
 				null,
 				null,
-				null,
-				new AiQueryProperties.Cache(false, 60, 20));
+				new AiQueryProperties.Cache(false, 60, 20),
+				null);
 		var catalogRepository = mock(CatalogRepository.class);
 		when(catalogRepository.current()).thenReturn(catalog());
 		when(catalogRepository.currentIndex()).thenReturn(org.parkjw.agent.backoffice.catalog.CatalogSearchIndex.empty());
@@ -208,8 +208,8 @@ class QueryServiceCacheTest {
 				null,
 				null,
 				null,
-				null,
-				new AiQueryProperties.Cache(false, 60, 20));
+				new AiQueryProperties.Cache(false, 60, 20),
+				null);
 		var catalogRepository = mock(CatalogRepository.class);
 		when(catalogRepository.current()).thenReturn(catalog());
 		when(catalogRepository.currentIndex()).thenReturn(org.parkjw.agent.backoffice.catalog.CatalogSearchIndex.empty());
@@ -248,8 +248,8 @@ class QueryServiceCacheTest {
 				null,
 				null,
 				null,
-				null,
-				new AiQueryProperties.Cache(true, 60, 20));
+				new AiQueryProperties.Cache(true, 60, 20),
+				null);
 		var cache = new QueryResultCache(properties);
 		var request = new QueryRequest(
 				"operator-123",

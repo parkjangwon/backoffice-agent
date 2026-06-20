@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 class SqlAccessGuardTest {
 
 	private final SqlAnalyzer analyzer = new SqlAnalyzer();
-	private final SqlAccessGuard guard = new SqlAccessGuard(properties(true), analyzer);
+	private final SqlAccessGuard guard = new SqlAccessGuard(properties(), analyzer);
 	private final AccessContext scopedActor = new AccessContext(
 			"operator-123",
 			AccessRole.SCOPED,
@@ -107,27 +107,6 @@ class SqlAccessGuardTest {
 	}
 
 	@Test
-	void inspect_whenUserNameIsEncryptedAndSqlQueriesNameColumn() {
-		// given
-		var sql = "select email, name from users where domain = 'example.org'";
-
-		// when / then
-		assertThatThrownBy(() -> guard.inspect(sql, scopedActor, catalog))
-				.isInstanceOf(SqlPolicyException.class)
-				.hasMessageContaining("encrypted user-name");
-	}
-
-	@Test
-	void inspect_whenUserNameIsPlainAndSqlQueriesNameColumn() {
-		// given
-		var plainNameGuard = new SqlAccessGuard(properties(false), analyzer);
-		var sql = "select email, name from users where domain = 'example.org'";
-
-		// when / then
-		assertThatCode(() -> plainNameGuard.inspect(sql, scopedActor, catalog)).doesNotThrowAnyException();
-	}
-
-	@Test
 	void inspect_whenGlobalActorQueriesServiceAdminAccountTable() {
 		// given
 		var sql = "select admin_id, email from service_catalog.admin_assignment";
@@ -160,14 +139,13 @@ class SqlAccessGuardTest {
 		return new TableCatalog("service_catalog", name, "TABLE", null, -1L, List.of(), List.of(), List.of());
 	}
 
-	private AiQueryProperties properties(boolean userNameEncrypted) {
+	private AiQueryProperties properties() {
 		return new AiQueryProperties(
 				null,
-					null,
-					null,
-					null,
-					null,
-					new AiQueryProperties.DataPolicy(userNameEncrypted),
-					null);
+				null,
+				null,
+				null,
+				null,
+				null);
 	}
 }

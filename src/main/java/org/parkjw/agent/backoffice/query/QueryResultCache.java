@@ -98,8 +98,7 @@ public class QueryResultCache {
 				normalizedList(accessContext.allowedDatabases()),
 				trimToEmpty(request.prompt()),
 				limit,
-				catalog.scannedAt(),
-				properties.dataPolicy().userNameEncrypted());
+				catalog.scannedAt());
 	}
 
 	private void evictExpired() {
@@ -136,8 +135,7 @@ public class QueryResultCache {
 			List<String> allowedDatabases,
 			String prompt,
 			int limit,
-			Instant catalogScannedAt,
-			boolean userNameEncrypted) {
+			Instant catalogScannedAt) {
 	}
 
 	private record Entry(QueryResult result, Instant expiresAt) {

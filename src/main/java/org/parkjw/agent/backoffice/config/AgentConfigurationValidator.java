@@ -37,7 +37,6 @@ public class AgentConfigurationValidator implements ApplicationRunner {
 		requirePositiveInt("ai-query.policy.max-limit");
 		requirePositiveInt("ai-query.policy.query-timeout-seconds");
 		requirePositiveInt("ai-query.policy.export-max-rows");
-		requireProperty("ai-query.data-policy.user-name-encrypted");
 		requireAtLeastOneAuthMechanism();
 		requireApiKeys();
 		requireRequestSigningSecret();

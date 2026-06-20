@@ -48,5 +48,3 @@ ai-query:
     max-limit: 1000
     query-timeout-seconds: 10
     export-max-rows: 5000
-  data-policy:
-    user-name-encrypted: true
