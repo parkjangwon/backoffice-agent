@@ -25,6 +25,7 @@ import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.Join;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.ParenthesedSelect;
 
 import org.springframework.stereotype.Component;
 
@@ -96,6 +97,19 @@ public class ScopeEnforcer {
 		if (plainSelect == null) {
 			return Optional.empty();
 		}
+		
+		// Prevent scope bypass via subqueries by ensuring no subselect exists in FROM or JOIN items
+		if (plainSelect.getFromItem() instanceof ParenthesedSelect) {
+			throw new SqlPolicyException("SQL queries containing subqueries in FROM clause are blocked.");
+		}
+		if (plainSelect.getJoins() != null) {
+			for (var join : plainSelect.getJoins()) {
+				if (join.getRightItem() instanceof ParenthesedSelect) {
+					throw new SqlPolicyException("SQL queries containing subqueries in JOIN clause are blocked.");
+				}
+			}
+		}
+
 		var tables = tables(plainSelect);
 		if (tables.isEmpty()) {
 			return Optional.empty();

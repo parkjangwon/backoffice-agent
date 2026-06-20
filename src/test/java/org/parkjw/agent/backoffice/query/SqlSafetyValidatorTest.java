@@ -53,4 +53,15 @@ class SqlSafetyValidatorTest {
 				.isInstanceOf(SqlPolicyException.class)
 				.hasMessageContaining("blocked token");
 	}
+
+	@Test
+	void requireReadOnlySelect_whenSqlContainsCteWithClause_blocksQuery() {
+		// given
+		var sql = "with active_users as (select id from users where status = 'ACTIVE') select * from active_users";
+
+		// when / then
+		assertThatThrownBy(() -> validator.requireReadOnlySelect(sql))
+				.isInstanceOf(SqlPolicyException.class)
+				.hasMessageContaining("WITH clauses (CTE) are blocked");
+	}
 }

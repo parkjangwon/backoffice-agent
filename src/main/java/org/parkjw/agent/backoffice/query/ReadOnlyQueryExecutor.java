@@ -27,6 +27,9 @@ public class ReadOnlyQueryExecutor {
 	}
 
 	public QueryResult execute(String sql, int limit) {
+		// Double check read-only safety before execution on the database level
+		SqlSafetyValidatorTestHelper.validate(sql);
+
 		var connection = DataSourceUtils.getConnection(dataSource);
 		try {
 			connection.setReadOnly(true);

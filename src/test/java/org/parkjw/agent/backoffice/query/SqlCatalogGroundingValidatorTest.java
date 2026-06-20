@@ -76,7 +76,9 @@ class SqlCatalogGroundingValidatorTest {
 				""";
 
 		// when / then
-		assertThatCode(() -> validator.requireCatalogTables(sql, catalog, scopedActor)).doesNotThrowAnyException();
+		assertThatThrownBy(() -> validator.requireCatalogTables(sql, catalog, scopedActor))
+				.isInstanceOf(SqlPolicyException.class)
+				.hasMessageContaining("WITH clauses (CTE) are blocked");
 	}
 
 	private TableCatalog table(String name) {

@@ -226,6 +226,40 @@ class ScopeEnforcerTest {
 	}
 
 	@Test
+	void enforce_whenSqlContainsSubqueryInFrom_blocksQuery() {
+		// given
+		var admin = new AccessContext(
+				"operator-123",
+				AccessRole.SCOPED,
+				List.of("example.org"),
+				List.of(),
+				true);
+		var sql = "select id from (select * from users) u";
+
+		// when / then
+		assertThatThrownBy(() -> enforcer.enforce(sql, admin, singleSchemaCatalog(), CatalogSearchIndex.empty()))
+				.isInstanceOf(SqlPolicyException.class)
+				.hasMessageContaining("subqueries in FROM clause are blocked");
+	}
+
+	@Test
+	void enforce_whenSqlContainsSubqueryInJoin_blocksQuery() {
+		// given
+		var admin = new AccessContext(
+				"operator-123",
+				AccessRole.SCOPED,
+				List.of("example.org"),
+				List.of(),
+				true);
+		var sql = "select u.id from users u join (select * from company) c on c.id = u.company_id";
+
+		// when / then
+		assertThatThrownBy(() -> enforcer.enforce(sql, admin, singleSchemaCatalog(), CatalogSearchIndex.empty()))
+				.isInstanceOf(SqlPolicyException.class)
+				.hasMessageContaining("subqueries in JOIN clause are blocked");
+	}
+
+	@Test
 	void enforce_whenScopedActorSqlDoesNotProjectDomain() {
 		// given
 		var admin = new AccessContext(

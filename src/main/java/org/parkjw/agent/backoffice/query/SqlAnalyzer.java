@@ -22,6 +22,10 @@ public class SqlAnalyzer {
 			if (statements.size() != 1 || !(statements.getFirst() instanceof Select select)) {
 				throw new SqlPolicyException("Only a single SELECT statement is allowed.");
 			}
+			// Block CTE (WITH clauses) for open source security model to prevent scope bypass
+			if (select.getWithItemsList() != null && !select.getWithItemsList().isEmpty()) {
+				throw new SqlPolicyException("SQL queries containing WITH clauses (CTE) are blocked.");
+			}
 			return new ParsedSql(normalized, select, tableReferences(select));
 		}
 		catch (JSQLParserException exception) {
