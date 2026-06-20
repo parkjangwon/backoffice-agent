@@ -2,6 +2,8 @@ package org.parkjw.agent.backoffice.query;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 class SqlIdentifierQuoteNormalizerTest {
@@ -18,5 +20,29 @@ class SqlIdentifierQuoteNormalizerTest {
 		assertThat(normalized)
 				.contains("from `tenant_acme`.`usage_quota` q")
 				.contains("as `email`");
+	}
+
+	@Test
+	void normalize_whenSingleDatabaseIsAllowed_replacesPlaceholderDatabaseQualifier() {
+		// given
+		var sql = "select count(*) as total from database.mbbmaillog202606";
+
+		// when
+		var normalized = SqlIdentifierQuoteNormalizer.normalize(sql, List.of("arch"));
+
+		// then
+		assertThat(normalized).isEqualTo("select count(*) as total from `arch`.`mbbmaillog202606`");
+	}
+
+	@Test
+	void normalize_whenMultipleDatabasesAreAllowed_keepsPlaceholderDatabaseQualifier() {
+		// given
+		var sql = "select count(*) as total from database.mbbmaillog202606";
+
+		// when
+		var normalized = SqlIdentifierQuoteNormalizer.normalize(sql, List.of("arch", "tenant_a"));
+
+		// then
+		assertThat(normalized).isEqualTo(sql);
 	}
 }

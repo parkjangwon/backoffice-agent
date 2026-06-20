@@ -1,5 +1,7 @@
 package org.parkjw.agent.backoffice.query;
 
+import java.util.List;
+
 import org.parkjw.agent.backoffice.config.AiQueryProperties;
 
 import org.springframework.ai.chat.client.ChatClient;
@@ -64,7 +66,7 @@ public class ChatClientSqlGenerator implements SqlGenerator {
 					.user(userPrompt(context, groundingFailure, rejectedExecutionReason))
 					.call()
 					.content();
-			return extractSql(content);
+			return extractSql(content, context);
 		}
 		catch (SqlPolicyException exception) {
 			throw exception;
@@ -75,7 +77,7 @@ public class ChatClientSqlGenerator implements SqlGenerator {
 		}
 	}
 
-	private String extractSql(String content) {
+	private String extractSql(String content, QueryContext context) {
 		if (content == null || content.isBlank()) {
 			throw new SqlPolicyException("LLM returned an empty SQL response.");
 		}
@@ -84,7 +86,7 @@ public class ChatClientSqlGenerator implements SqlGenerator {
 			if (sql.isBlank()) {
 				throw new SqlPolicyException("LLM response must include a non-empty sql field.");
 			}
-			return SqlIdentifierQuoteNormalizer.normalize(sql);
+			return SqlIdentifierQuoteNormalizer.normalize(sql, placeholderReplacementDatabases(context));
 		}
 		catch (SqlPolicyException exception) {
 			throw exception;
@@ -122,6 +124,16 @@ public class ChatClientSqlGenerator implements SqlGenerator {
 				Prefer indexed filters and avoid full scans when a usable indexed/date/scope/email column exists.
 				Prefer MySQL/MariaDB compatible SQL for MySQL/MariaDB catalogs.
 				""".formatted(properties.dataPolicy().userNameEncrypted());
+	}
+
+	private List<String> placeholderReplacementDatabases(QueryContext context) {
+		var allowedDatabases = context.accessContext().allowedDatabases();
+		if (!allowedDatabases.isEmpty()) {
+			return allowedDatabases;
+		}
+		return context.catalog().databases().stream()
+				.map(database -> database.name())
+				.toList();
 	}
 
 	private String userPrompt(QueryContext context, SqlPolicyException groundingFailure, String rejectedExecutionReason) {
